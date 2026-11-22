@@ -1,0 +1,1 @@
+kianv_simple_hardware_headers_only_target(clock)

@@ -1,0 +1,1 @@
+kianv_simple_hardware_target(gpio)

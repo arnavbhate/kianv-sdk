@@ -1,0 +1,3 @@
+kianv_simple_hardware_headers_only_target(uart)
+
+kianv_mirrored_target_link_libraries(hardware_uart INTERFACE hardware_clock)

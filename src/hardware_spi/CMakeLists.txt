@@ -1,0 +1,3 @@
+kianv_simple_hardware_target(spi)
+
+kianv_mirrored_target_link_libraries(hardware_spi INTERFACE hardware_clock)

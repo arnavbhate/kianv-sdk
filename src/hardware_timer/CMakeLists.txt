@@ -1,0 +1,3 @@
+kianv_simple_hardware_target(timer)
+
+kianv_mirrored_target_link_libraries(hardware_timer INTERFACE kianv_platform)
