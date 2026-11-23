@@ -171,7 +171,6 @@ The SDK's functions follow these rules; code that accesses the registers itself 
 - `DIV_REG` and the GPIO registers ignore byte enables: always access them with 32-bit loads and stores.
 - `DIV_REG` holds the UART divider (bits 15:0, shared by all UARTs) and the SPI0 divider (bits 31:16, readable only through `DIV_REG`, not at 0x10000012): change one half with a read-modify-write, with interrupts disabled.
 - Writing to a read-only register can hang the CPU: the UART line status register, and anything in flash (0x20000000-0x20FFFFFF) never answer a write.
-- Writing to addresses 0-0xFF overwrites the FSBL in block RAM, and the board then no longer boots until the FPGA is reprogrammed; a write through a null pointer does this.
 - Before writing an SPI data register, wait until the SPI is not busy (`spi_is_busy()`): writing during a transfer locks the SPI up.
 
 ## Libraries
@@ -315,7 +314,6 @@ Issues found in the SoC's RTL (`asic_fpga/`) that programmers may run into. The 
 
 ### Memory map and bus
 
-- The FSBL in block RAM (256 bytes at address 0) is writable (`bram_if.v`): a write through a null pointer corrupts it, and every later reset or reboot fails until the FPGA is reprogrammed. Null-pointer reads return FSBL code instead of faulting.
 - A store to flash (0x20000000-0x20FFFFFF) hangs the CPU: it passes the access-fault check (`soc.v`), but the flash interface only answers reads (`spi_nor_if.v`). It should raise a store access fault.
 - `is_reboot` in `soc.v` is `is_reboot_addr || is_reboot_data` where `&&` was meant, and the access-fault check uses it: any data access whose write data is `0x7777` skips the check, and an unmapped address then hangs the CPU.
 - Unmapped addresses in 0x10000000-0x12000000 read as 0 and ignore writes instead of faulting, which hides bugs. The range check also includes 0x12000000 itself.
